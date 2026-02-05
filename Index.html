@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrimePick – Curated Product Reviews</title>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #0b1224;
+      --border: #1e293b;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.15);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont;
+      background: radial-gradient(1200px 600px at top, #020617, #000);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ================= HEADER ================= */
+    header {
+      position: relative;
+      padding: 70px 20px 50px;
+      text-align: center;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+
+    #particles {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.6; /* subtle, professional */
+    }
+
+    header h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 12px;
+      font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      background: linear-gradient(90deg, #22c55e, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* SEARCH */
+    .search-box {
+      position: relative;
+      max-width: 420px;
+      margin: auto;
+      z-index: 1;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px 46px 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      outline: none;
+      background: rgba(2,6,23,0.85);
+      color: var(--text);
+      font-size: 14px;
+      backdrop-filter: blur(6px);
+    }
+
+    .search-box input::placeholder { color: #64748b; }
+
+    .search-box i {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+    }
+
+    /* ================= GRID ================= */
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 40px 20px 70px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 26px;
+    }
+
+    /* ================= CARD ================= */
+    .card {
+      background: linear-gradient(180deg, rgba(15,23,42,0.9), rgba(2,6,23,0.9));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.55);
+      transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 45px 110px rgba(0,0,0,0.85);
+      border-color: rgba(34,197,94,0.4);
+    }
+
+    /* 1:1 IMAGE */
+    .slider {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      background: radial-gradient(circle at top, #020617, #000);
+      overflow: hidden;
+    }
+
+    .slider img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 20px;
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    .slider img.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* CONTENT */
+    .card-content {
+      padding: 18px 18px 20px;
+    }
+
+    .card-content h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .card-content p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+
+    .review {
+      display: none;
+      margin-top: 12px;
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: #cbd5f5;
+    }
+
+    /* BUTTONS */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 9px 15px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-review {
+      background: transparent;
+      color: #38bdf8;
+    }
+
+    .btn-review:hover { text-decoration: underline; }
+
+    .btn-buy {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #022c22;
+      font-weight: 700;
+      box-shadow: 0 0 0 0 var(--accent-soft);
+    }
+
+    .btn-buy:hover {
+      box-shadow: 0 0 0 6px var(--accent-soft);
+    }
+
+    /* ================= FOOTER ================= */
+    footer{
+      text-align:center;
+      padding:30px 15px;
+      font-size:13px;
+      color:#64748b;
+      border-top:1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <canvas id="particles"></canvas>
+  <h1>PrimePick</h1>
+  <p>Carefully curated products. Honest reviews. Smart buying.</p>
+
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Search products" />
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </div>
+</header>
+
+<div class="container" id="productContainer"></div>
+
+<footer>
+  © 2026 PrimePick · Affiliate disclosure applies
+</footer>
+
+<script>
+/* ================= SUBTLE PARTICLES ================= */
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let w, h, dots = [];
+
+function resize(){
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = document.querySelector('header').offsetHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+for(let i=0;i<50;i++){
+  dots.push({
+    x: Math.random()*w,
+    y: Math.random()*h,
+    r: Math.random()*1.5+0.5,
+    dx: (Math.random()-0.5)*0.6,
+    dy: (Math.random()-0.5)*0.6,
+    c: `hsla(${Math.random()*360},80%,65%,0.8)`
+  });
+}
+
+function animate(){
+  ctx.clearRect(0,0,w,h);
+  dots.forEach(d=>{
+    d.x+=d.dx; d.y+=d.dy;
+    if(d.x<0||d.x>w) d.dx*=-1;
+    if(d.y<0||d.y>h) d.dy*=-1;
+    ctx.beginPath();
+    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fillStyle=d.c;
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ================= PRODUCTS ================= */
+const products = [
+  {
+    title: "Wireless Earbuds",
+    images: [
+      "https://m.media-amazon.com/images/I/61CGHv6kmWL._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61bK6PMOC3L._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61y2VVWcGBL._SL1500_.jpg"
+    ],
+    description: "Deep bass · ANC · Long battery",
+    review: "Sound balanced hai, calls clear aati hain aur daily use ke liye kaafi comfortable earbuds hain.",
+    link: "#"
+  },
+  {
+    title: "Smart Watch",
+    images: [
+      "https://m.media-amazon.com/images/I/61IMRs+o0iL._SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61J9B1Zz0XL._SL1500_.jpg"
+    ],
+    description: "Calling · Fitness · AMOLED",
+    review: "Display premium feel deta hai, tracking reliable hai aur overall value-for-money smartwatch hai.",
+    link: "#"
+  }
+];
+
+const container = document.getElementById('productContainer');
+
+function render(list){
+  container.innerHTML='';
+  list.forEach((p,i)=>{
+    const imgs = p.images.map((img,j)=>`<img src="${img}" class="${j===0?'active':''}">`).join('');
+
+    container.innerHTML += `
+      <div class="card">
+        <div class="slider">${imgs}</div>
+        <div class="card-content">
+          <h3>${p.title}</h3>
+          <p>${p.description}</p>
+          <div class="review" id="r${i}">${p.review}</div>
+          <div class="actions">
+            <button class="btn btn-review" onclick="toggle(${i})">Read review</button>
+            <a href="${p.link}" target="_blank"><button class="btn btn-buy">Buy Now</button></a>
+          </div>
+        </div>
+      </div>`;
+  });
+  sliders();
+}
+
+function sliders(){
+  document.querySelectorAll('.slider').forEach(sl=>{
+    const imgs = sl.querySelectorAll('img');
+    let i = Math.floor(Math.random()*imgs.length);
+    setInterval(()=>{
+      imgs[i].classList.remove('active');
+      i = (i+1)%imgs.length;
+      imgs[i].classList.add('active');
+    }, 2600 + Math.random()*1800);
+  });
+}
+
+function toggle(i){
+  const el = document.getElementById('r'+i);
+  el.style.display = el.style.display==='block'?'none':'block';
+}
+
+search.addEventListener('input', e=>{
+  const v = e.target.value.toLowerCase();
+  render(products.filter(p=>p.title.toLowerCase().includes(v)));
+});
+
+render(products);
+</script>
+</body>
+</html>
